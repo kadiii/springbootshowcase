@@ -2,16 +2,13 @@ package com.tmaciejewski.showcaseapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.tmaciejewski.showcaseapp.enums.StudyMode;
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -23,24 +20,28 @@ import org.springframework.data.annotation.PersistenceConstructor;
 
 
 @Entity
-@Table(name = "courses")
+@Table(name = "course_modules")
 @Builder
 @AllArgsConstructor
 @RequiredArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 @Setter
 @Getter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
-public class Course implements Serializable {
+public class CourseModule implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String name;
-    @Lob
-    private String description;
     @NotNull
-    private StudyMode studyMode;
+    private String name;
+    private String description;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-    private List<CourseModule> courseModules;
+    @ManyToOne
+    @JoinColumn(name="course_id")
+    private Course course;
+    
+    @ManyToOne
+    @JoinColumn(name="lecturer_id")
+    private Lecturer lecturer;
+    
 }
